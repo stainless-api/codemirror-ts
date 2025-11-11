@@ -1,5 +1,5 @@
 import type { VirtualTypeScriptEnvironment } from "@typescript/vfs";
-import type { DiagnosticWithLocation } from "typescript";
+import type ts from "typescript";
 import { convertTSDiagnosticToCM, isDiagnosticWithLocation } from "./utils.js";
 
 /**
@@ -24,8 +24,8 @@ export function getLints({
   const semanticDiagnostics = env.languageService.getSemanticDiagnostics(path);
 
   const diagnostics = [...syntaticDiagnostics, ...semanticDiagnostics].filter(
-    (diagnostic): diagnostic is DiagnosticWithLocation =>
-      isDiagnosticWithLocation(diagnostic),
+    (diagnostic): diagnostic is ts.DiagnosticWithLocation =>
+      isDiagnosticWithLocation(diagnostic)
   );
 
   return diagnostics.map(convertTSDiagnosticToCM);

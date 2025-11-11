@@ -1,12 +1,8 @@
-_Maintenance notice: Val Town now uses [vtlsp](https://github.com/val-town/vtlsp), which [runs the Deno LS and talks to it with the Language Server Protocol](https://blog.val.town/vtlsp). We won't be doing any first-party feature work on this codebase anymore, but are happy to accept pull requests from the community._
-
 # codemirror-ts
 
-<a href="https://www.npmjs.com/package/@valtown/codemirror-ts" rel="nofollow"><img src="https://img.shields.io/npm/dw/@valtown/codemirror-ts.svg" alt="npm"></a>
+<a href="https://www.npmjs.com/package/@stainless-api/codemirror-ts" rel="nofollow"><img src="https://img.shields.io/npm/dw/@stainless-api/codemirror-ts.svg" alt="npm"></a>
 
-_[Made by val.town](https://www.val.town/), a social website to write and deploy backend services._
-
-On npm as `@valtown/codemirror-ts`
+On npm as `@stainless-api/codemirror-ts`
 
 - [Demo on StackBlitz](https://stackblitz.com/edit/vitejs-vite-giwkc3?file=index.html)
 - [Demo on StackBlitz using Web Workers](https://stackblitz.com/edit/vitejs-vite-qsncw4?file=src%2Fmain.ts)
@@ -57,7 +53,7 @@ import {
 } from "@typescript/vfs";
 import ts from "typescript";
 import * as Comlink from "comlink";
-import { createWorker } from "@valtown/codemirror-ts/worker";
+import { createWorker } from "@stainless-api/codemirror-ts/worker";
 
 Comlink.expose(
   createWorker(async function () {
@@ -65,12 +61,12 @@ Comlink.expose(
       { target: ts.ScriptTarget.ES2022 },
       "5.7.3",
       false,
-      ts,
+      ts
     );
     const system = createSystem(fsMap);
     const compilerOpts = {};
     return createVirtualTypeScriptEnvironment(system, [], ts, compilerOpts);
-  }),
+  })
 );
 ```
 
@@ -90,7 +86,7 @@ Now, on the application side (in the code in which you're initializing CodeMirro
 you'll need to import and initialize the worker:
 
 ```ts
-import { type WorkerShape } from "@valtown/codemirror-ts/worker";
+import { type WorkerShape } from "@stainless-api/codemirror-ts/worker";
 import * as Comlink from "comlink";
 
 const innerWorker = new Worker(new URL("./worker.ts", import.meta.url), {
@@ -143,7 +139,7 @@ const worker = createWorker({
       { target: ts.ScriptTarget.ES2022 },
       ts.version,
       false,
-      ts,
+      ts
     );
     const system = createSystem(fsMap);
     return createVirtualTypeScriptEnvironment(system, [], ts, {
@@ -189,9 +185,9 @@ In your worker, nest the `worker` instead of directly exposing it.
 Comlink.expose({
   worker,
   anotherMethod() {
-    return 'another-result';
-  }
-})
+    return "another-result";
+  },
+});
 ```
 
 In the front-end, reach in for the exposed worker:

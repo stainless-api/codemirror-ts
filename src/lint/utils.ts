@@ -1,5 +1,13 @@
 import type { Diagnostic } from "@codemirror/lint";
-import ts from "typescript";
+import type ts from "typescript";
+import { enumObject } from "../enumObject.js";
+
+const DiagnosticCategory = enumObject<typeof ts.DiagnosticCategory>({
+  Warning: 0,
+  Error: 1,
+  Suggestion: 2,
+  Message: 3,
+});
 
 /**
  * TypeScript has a set of diagnostic categories,
@@ -7,20 +15,20 @@ import ts from "typescript";
  * Here, we do the mapping.
  */
 export function tsCategoryToSeverity(
-  diagnostic: Pick<ts.DiagnosticWithLocation, "category" | "code">,
+  diagnostic: Pick<ts.DiagnosticWithLocation, "category" | "code">
 ): Diagnostic["severity"] {
   if (diagnostic.code === 7027) {
     // Unreachable code detected
     return "warning";
   }
   switch (diagnostic.category) {
-    case ts.DiagnosticCategory.Error:
+    case DiagnosticCategory.Error:
       return "error";
-    case ts.DiagnosticCategory.Message:
+    case DiagnosticCategory.Message:
       return "info";
-    case ts.DiagnosticCategory.Warning:
+    case DiagnosticCategory.Warning:
       return "warning";
-    case ts.DiagnosticCategory.Suggestion:
+    case DiagnosticCategory.Suggestion:
       return "info";
   }
 }
@@ -31,7 +39,7 @@ export function tsCategoryToSeverity(
  * do.
  */
 export function isDiagnosticWithLocation(
-  diagnostic: ts.Diagnostic,
+  diagnostic: ts.Diagnostic
 ): diagnostic is ts.DiagnosticWithLocation {
   return !!(
     diagnostic.file &&
@@ -47,7 +55,7 @@ export function isDiagnosticWithLocation(
  * to get a string, regardless of which case we're in.
  */
 export function tsDiagnosticMessage(
-  diagnostic: Pick<ts.Diagnostic, "messageText">,
+  diagnostic: Pick<ts.Diagnostic, "messageText">
 ): string {
   if (typeof diagnostic.messageText === "string") {
     return diagnostic.messageText;
@@ -62,7 +70,7 @@ export function tsDiagnosticMessage(
  * from one to the other.
  */
 export function convertTSDiagnosticToCM(
-  d: ts.DiagnosticWithLocation,
+  d: ts.DiagnosticWithLocation
 ): Diagnostic {
   // We add some code at the end of the document, but we can't have a
   // diagnostic in an invalid range

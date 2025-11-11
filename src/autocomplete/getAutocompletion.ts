@@ -1,12 +1,19 @@
 import type { CompletionContext } from "@codemirror/autocomplete";
 import type { VirtualTypeScriptEnvironment } from "@typescript/vfs";
-import ts from "typescript";
+import type ts from "typescript";
 import type { RawCompletion, RawCompletionItem } from "../types.js";
 import { DEFAULT_CODEMIRROR_TYPE_ICONS } from "./icons.js";
 import { matchBefore } from "./matchBefore.js";
+import { enumObject } from "../enumObject.js";
+
+const ScriptElementKind = enumObject<
+  Pick<typeof ts.ScriptElementKind, "warning">
+>({
+  warning: "warning",
+});
 
 const TS_COMPLETE_BLOCKLIST: ts.ScriptElementKind[] = [
-  ts.ScriptElementKind.warning,
+  ScriptElementKind.warning,
 ];
 
 export interface AutocompletionInfo {
@@ -50,7 +57,7 @@ export async function getAutocompletion({
       includeCompletionsForModuleExports: true,
       includeCompletionsForImportStatements: true,
     },
-    {},
+    {}
   );
 
   // TODO: build ATA support for a 'loading' state
@@ -75,7 +82,7 @@ export async function getAutocompletion({
         {},
         entry.source,
         {},
-        entry.data,
+        entry.data
       );
 
       return {
